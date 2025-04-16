@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+        <button onclick="refreshOrders()">Refresh Orders</button>
+    </div>
+
+    <!-- Upload Menu Section -->
+    <div class="section">
+        <h2>Manage Menu</h2>
+
+        <!-- Upload Form -->
+        <form id="upload-form" action="/upload" method="POST" enctype="multipart/form-data">
+            <label for="menu-files">Upload Menu Images:</label>
+            <input type="file" name="menu_files" id="menu-files" multiple>
+            <button type="submit">Upload</button>
+        </form>
+
+        <!-- Menu Gallery -->
+        <div id="menu-gallery" class="gallery">
+            <!-- Menu images will be displayed here -->
+        </div>
+    </div>
+
+    <!-- Live Orders Section -->
+    <div class="section">
+        <h2>Live Orders</h2>
+        <div id="orders-list" class="orders">
+            <!-- Live orders will be dynamically added here -->
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Auto-refresh orders every 30 seconds
+    setInterval(() => {
+        refreshOrders();
+    }, 30000);
+
+    // Fetch and display live orders
+    function refreshOrders() {
+        fetch('/get_orders')
+            .then(res => res.json())
+            .then(data => {
+                const ordersList = document.getElementById('orders-list');
+                ordersList.innerHTML = '';
+                data.orders.forEach(order => {
+                    const orderEl = document.createElement('div');
+                    orderEl.classList = 'order-card';
+                    orderEl.innerHTML = `
+                        <p><strong>Customer:</strong> ${order.customer}</p>
+                        <p><strong>Item:</strong> ${order.item}</p>
+                        <p><strong>Quantity:</strong> ${order.quantity}</p>
+                        <p><strong>Status:</strong> ${order.status}</p>
+                    `;
+                    ordersList.appendChild(orderEl);
+                });
+            })
+            .catch(err => console.error('Error:', err));
+    }
+
+    // Fetch and display uploaded menu images
+    function fetchMenuImages() {
+        fetch('/get_menu')
+            .then(res => res.json())
+            .then(data => {
+                const gallery = document.getElementById('menu-gallery');
+                gallery.innerHTML = '';
+                data.images.forEach(image => {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.classList = 'image-card';
+                    
+                    imgDiv.innerHTML = `
+                        <img src="${image}" alt="Menu" class="menu-img">
+                        <button onclick="deleteImage('${image}')">Delete</button>
+                    `;
+                    gallery.appendChild(imgDiv);
+                });
+            })
+            .catch(err => console.error('Error:', err));
+    }
+
+    // Delete menu image
+    function deleteImage(imageUrl) {
+        fetch('/delete_menu', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image_url: imageUrl })
+        })
+        .then(() => fetchMenuImages())
+        .catch(err => console.error('Error:', err));
+    }
+
+    // Initial load
+    fetchMenuImages();
+    refreshOrders();
+</script>
+
+</body>
+</html>

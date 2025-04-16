@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Restaurant Management</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Menu Management Section -->
+    <div class="box menu-container">
+        <h2>Menu Management</h2>
+        
+        <!-- Upload Menu Images -->
+        <form id="upload-form" enctype="multipart/form-data" method="POST" action="/upload">
+            <label for="menu">Upload Menu Images:</label>
+            <input type="file" id="menu" name="menu" multiple accept="image/*" required>
+            <button type="submit">Upload</button>
+        </form>
+
+        <hr>
+
+        <!-- Delete Menu Images -->
+        <h3>Delete Menu Images</h3>
+        <form id="delete-form" method="POST" action="/delete">
+            <label for="menu-name">Select Image to Delete:</label>
+            <select id="menu-name" name="menu-name" required>
+                <!-- Menu items populated dynamically -->
+            </select>
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+
+    <!-- Live Orders Section -->
+    <div class="box orders-container">
+        <h2>Live Orders</h2>
+        <table id="orders-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>User</th>
+                    <th>Order Details</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="orders-body">
+                <!-- Live orders will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    // Function to load images into the delete dropdown
+    function loadMenuImages() {
+        fetch('/get_menu_images')
+            .then(response => response.json())
+            .then(data => {
+                const menuSelect = document.getElementById('menu-name');
+                menuSelect.innerHTML = '';  // Clear previous options
+                data.forEach(img => {
+                    const option = document.createElement('option');
+                    option.value = img;
+                    option.textContent = img;
+                    menuSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading menu images:', error));
+    }
+
+    // Function to load live orders
+    function loadLiveOrders() {
+        fetch('/get_orders')
+            .then(response => response.json())
+            .then(data => {
+                const ordersBody = document.getElementById('orders-body');
+                ordersBody.innerHTML = '';  // Clear existing rows
+
+                if (data.length > 0) {
+                    data.forEach(order => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${order.id}</td>
+                            <td>${order.user}</td>
+                            <td>${order.order_details}</td>
+                            <td>${order.status}</td>
+                            <td>${order.time}</td>
+                        `;
+                        ordersBody.appendChild(row);
+                    });
+                } else {
+                    const emptyRow = document.createElement('tr');
+                    emptyRow.innerHTML = `<td colspan="5">No orders found.</td>`;
+                    ordersBody.appendChild(emptyRow);
+                }
+            })
+            .catch(error => console.error('Error loading live orders:', error));
+    }
+
+    // Periodically refresh the live orders and menu images every 5 seconds
+    setInterval(() => {
+        loadLiveOrders();
+        loadMenuImages();
+    }, 5000);
+
+    // Initial load when the page opens
+    window.onload = () => {
+        loadMenuImages();
+        loadLiveOrders();
+    };
+</script>
+
+</body>
+</html>

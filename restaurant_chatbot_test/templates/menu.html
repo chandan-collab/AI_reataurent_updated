@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock title %}
+
+{% block body %}
+<link rel="stylesheet" href="../static/css/menu.css">
+<body>
+    <h1>Insert Menu Item</h1>
+    <form action="/add_menu" method="POST">
+        <label>Item Code:</label>
+        <input type="text" name="item_code" required>
+        <label>Food Type:</label>
+        <select name="food_type" required id="food_type">
+            <option value="" disabled selected>Select Food Type</option>
+            <option value="veg">Veg</option>
+            <option value="non-veg">Non-Veg</option>
+            <option value="appetizer">Appetizers</option>
+            <option value="desserts">Desserts</option>
+            </select>
+            <label>Food Group:</label>
+            <select name="food_group" required id="food_group">
+            <option value="" disabled selected>Select Food Group</option>
+            </select>
+    
+        <script>
+            const foodTypeSelect = document.querySelector('select[name="food_type"]');
+            const foodGroupSelect = document.getElementById('food_group');
+    
+            const vegOptions = [
+                "Vegetable Biryani",
+                "Paneer",
+                "Curry",
+                "Rice",
+                "Bread",
+                "Sabzi",
+                "Sashroom",
+                "Veg-Combo"
+            ];
+    
+            const nonVegOptions = [
+                "Chicken",
+                "Mutton",
+                "Fish",
+                "Egg",
+                "Biryani",
+                "Curry",
+                "Tandoori"
+            ];
+    
+            const appetizerOptions = [
+                "Sweet",
+                "Salty",
+                "Spicy",
+                "Sour"
+            ];
+    
+            const dessertOptions = [
+                "Sweet",
+                "Salty"
+            ];
+    
+            foodTypeSelect.addEventListener('change', function () {
+                foodGroupSelect.innerHTML = '<option value="" disabled selected>Select Food Group</option>';
+                let options = [];
+                if (this.value === 'veg') {
+                options = vegOptions;
+                } else if (this.value === 'non-veg') {
+                options = nonVegOptions;
+                } else if (this.value === 'appetizer') {
+                options = appetizerOptions;
+                } else if (this.value === 'desserts') {
+                options = dessertOptions;
+                }
+                options.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option.toLowerCase().replace(/\s+/g, '_');
+                opt.textContent = option;
+                foodGroupSelect.appendChild(opt);
+                });
+            });
+            
+        </script>
+    
+        <label>Name:</label>
+        <input type="text" name="name" required>
+    
+        <label>Description:</label>
+        <input type="text" name="description" required>
+    
+        <label>Price:</label>
+        <input type="number" name="price" step="1" required>
+    
+        <button type="submit">Insert</button>
+    </form>
+    <div class="menu-operations">
+        <h2>Other menu operations</h2>
+        <a href="/fetch_menu" class="btn btn-op">See Menu Card</a>
+        
+        <button type="button" id="saveMenuButton">Save Menu Card</button>
+        
+        <!-- Loader -->
+        <div id="loader" class="premium-loader" style="display: none;"></div>
+    
+        <script>
+            document.getElementById("saveMenuButton").addEventListener("click", function() {
+                let loader = document.getElementById("loader");
+                loader.style.display = "block";  // Show loader
+    
+                fetch("/save_menu_screenshot", { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => console.error("Error:", error))
+                .finally(() => {
+                    setTimeout(() => {
+                        loader.style.display = "none"; // Hide loader after  seconds
+                    }, 1000);
+                });
+            });
+            </script>
+    
+    </div>
+    <h2>Menu Items in DB</h2>
+    
+    <!-- Toggle Button -->
+    <button id="toggleMenuBtn">See Menu Items</button>
+    
+    <!-- Table (Initially Hidden) -->
+    <table id="menuTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Item Code</th>
+                <th>Food Type</th>
+                <th>Food Group</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="menuBody"></tbody>
+    </table>
+    
+    <!-- Show More Button (Hidden Initially) -->
+    <button id="showMoreBtn" style="display: none;">Show More</button>
+    
+    <script>
+        let currentIndex = 0;
+        let menuItems = JSON.parse('{{ menu_items | tojson | safe }}');
+        let isMenuVisible = false; // Track menu visibility
+    
+        document.getElementById("toggleMenuBtn").addEventListener("click", function() {
+            let menuTable = document.getElementById("menuTable");
+            let showMoreBtn = document.getElementById("showMoreBtn");
+    
+            if (isMenuVisible) {
+                // Hide menu
+                menuTable.style.display = "none";
+                showMoreBtn.style.display = "none";
+                this.textContent = "See Menu Items"; // Change button text
+            } else {
+                // Show menu
+                menuTable.style.display = "table";
+                showMoreBtn.style.display = "block";
+                this.textContent = "Hide Menu Items"; // Change button text
+    
+                if (currentIndex === 0) {
+                    loadMenuItems(); // Load first batch
+                }
+            }
+    
+            isMenuVisible = !isMenuVisible; // Toggle state
+        });
+    
+        document.getElementById("showMoreBtn").addEventListener("click", function() {
+            loadMenuItems();
+        });
+    
+        function loadMenuItems() {
+            let menuBody = document.getElementById("menuBody");
+    
+            for (let i = currentIndex; i < currentIndex + 5 && i < menuItems.length; i++) {
+                let item = menuItems[i];
+                let row = `<tr>
+                    <td>${item.item_code}</td>
+                    <td>${item.food_type}</td>
+                    
+                    <td>${item.food_group}</td>
+                    <td>${item.name}</td>
+                    <td>${item.description}</td>
+                    <td>${item.price}</td>
+                    <td>
+                        <a href="/edit_menu/${item.item_code}" class="btn btn-edit">Edit</a>
+                        <a href="/delete_menu/${item.item_code}" class="btn btn-delete">Delete</a>
+                    </td>
+                </tr>`;
+                menuBody.innerHTML += row;
+            }
+    
+            currentIndex += 5;
+            if (currentIndex >= menuItems.length) {
+                document.getElementById("showMoreBtn").style.display = "none"; // Hide button if all items loaded
+            }
+        }
+    </script>
+    
+</body>   
+    
+{% endblock body %}

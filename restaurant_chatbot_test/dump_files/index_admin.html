@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Indian Food Menu - Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .admin-header {
+            background-color: #d32f2f;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .section-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .menu-section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .menu-section h2 {
+            color: #d32f2f;
+            border-bottom: 2px solid #d32f2f;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .menu-item input, .menu-item textarea {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #d32f2f;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-add {
+            background-color: #2196F3;
+            color: white;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Indian Food Menu - Admin Management</h1>
+        </div>
+
+        <div class="section-container" id="menuSections">
+            <!-- Biryani Section -->
+            <div class="menu-section">
+                <h2>Biryani Section</h2>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="B01">
+                    <input type="text" placeholder="Item Name" value="Chicken Biryani">
+                    <input type="number" placeholder="Price" value="8.99" step="1">
+                    <textarea placeholder="Description">Aromatic basmati rice layered with tender chicken, exotic spices, and garnished with fresh herbs.</textarea>
+                </div>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="B02">
+                    <input type="text" placeholder="Item Name" value="Mutton Biryani">
+                    <input type="number" placeholder="Price" value="8.99" step="1">
+                    <textarea placeholder="Description">Rich and flavorful biryani made with slow-cooked mutton, fragrant spices, and premium basmati rice.</textarea>
+                </div>
+                <button class="btn btn-add">+ Add New Item</button>
+            </div>
+
+            <!-- Curry Section -->
+            <div class="menu-section">
+                <h2>Curry Section</h2>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="C01">
+                    <input type="text" placeholder="Item Name" value="Butter Chicken">
+                    <input type="number" placeholder="Price" value="9.99" step="1">
+                    <textarea placeholder="Description">Tender chicken in a rich, creamy tomato sauce with a perfect blend of traditional Indian spices.</textarea>
+                </div>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="C02">
+                    <input type="text" placeholder="Item Name" value="Palak Paneer">
+                    <input type="number" placeholder="Price" value="8.99" step="1">
+                    <textarea placeholder="Description">Soft cottage cheese cubes simmered in a smooth, vibrant spinach gravy with aromatic spices.</textarea>
+                </div>
+                <button class="btn btn-add">+ Add New Item</button>
+            </div>
+
+            <!-- Bread Section -->
+            <div class="menu-section">
+                <h2>Bread Section</h2>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="BR01">
+                    <input type="text" placeholder="Item Name" value="Butter Naan">
+                    <input type="number" placeholder="Price" value="3.99" step="1">
+                    <textarea placeholder="Description">Soft, fluffy tandoor-baked bread brushed with melted butter, perfect for scooping up curries.</textarea>
+                </div>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="BR02">
+                    <input type="text" placeholder="Item Name" value="Garlic Naan">
+                    <input type="number" placeholder="Price" value="4.49" step="1">
+                    <textarea placeholder="Description">Classic naan bread generously topped with fresh garlic and herbs, baked to crispy perfection.</textarea>
+                </div>
+                <button class="btn btn-add">+ Add New Item</button>
+            </div>
+
+            <!-- Appetizers Section -->
+            <div class="menu-section">
+                <h2>Appetizers Section</h2>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="A01">
+                    <input type="text" placeholder="Item Name" value="Samosas">
+                    <input type="number" placeholder="Price" value="5.99" step="1">
+                    <textarea placeholder="Description">Crispy pastry triangles filled with spiced potatoes and peas, served with tangy chutney.</textarea>
+                </div>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="A02">
+                    <input type="text" placeholder="Item Name" value="Pakoras">
+                    <input type="number" placeholder="Price" value="4.99" step="1">
+                    <textarea placeholder="Description">Crispy vegetable fritters made with chickpea batter, deep-fried to golden perfection.</textarea>
+                </div>
+                <button class="btn btn-add">+ Add New Item</button>
+            </div>
+
+            <!-- Vegetarian Section -->
+            <div class="menu-section">
+                <h2>Vegetarian Section</h2>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="V01">
+                    <input type="text" placeholder="Item Name" value="Chana Masala">
+                    <input type="number" placeholder="Price" value="8.99" step="1">
+                    <textarea placeholder="Description">Spicy chickpea curry cooked with onions, tomatoes, and a blend of aromatic Indian spices.</textarea>
+                </div>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="V02">
+                    <input type="text" placeholder="Item Name" value="Vegetable Korma">
+                    <input type="number" placeholder="Price" value="9.49" step="1">
+                    <textarea placeholder="Description">Mixed vegetables in a creamy, mild curry sauce with cashews and gentle spices.</textarea>
+                </div>
+                <button class="btn btn-add">+ Add New Item</button>
+            </div>
+
+            <!-- Desserts Section -->
+            <div class="menu-section">
+                <h2>Desserts Section</h2>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="D01">
+                    <input type="text" placeholder="Item Name" value="Gulab Jamun">
+                    <input type="number" placeholder="Price" value="4.99" step="1">
+                    <textarea placeholder="Description">Soft, spongy milk-solid balls deep-fried and soaked in rose-flavored sugar syrup.</textarea>
+                </div>
+                <div class="menu-item">
+                    <input type="text" placeholder="Menu Code" value="D02">
+                    <input type="text" placeholder="Item Name" value="Rasmalai">
+                    <input type="number" placeholder="Price" value="5.49" step="1">
+                    <textarea placeholder="Description">Soft cheese patties served in creamy, saffron-infused milk, garnished with chopped pistachios.</textarea>
+                </div>
+                <button class="btn btn-add">+ Add New Item</button>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="saveMenu">Save Menu Changes</button>
+            <button class="btn btn-secondary" id="previewMenu">Preview Menu</button>
+        </div>
+    </div>
+
+    <script>
+        // Add new item functionality
+        document.querySelectorAll('.btn-add').forEach(button => {
+            button.addEventListener('click', function() {
+                const section = this.closest('.menu-section');
+                const newItem = document.createElement('div');
+                newItem.classList.add('menu-item');
+                newItem.innerHTML = `
+                    <input type="text" placeholder="Menu Code">
+                    <input type="text" placeholder="Item Name">
+                    <input type="number" placeholder="Price" step="1">
+                    <textarea placeholder="Description"></textarea>
+                `;
+                section.insertBefore(newItem, this);
+            });
+        });
+
+        // Save menu changes (local storage simulation)
+        document.getElementById('saveMenu').addEventListener('click', function() {
+            const menuSections = document.getElementById('menuSections');
+            const menuData = [];
+
+            menuSections.querySelectorAll('.menu-section').forEach(section => {
+                const sectionName = section.querySelector('h2').textContent;
+                const items = [];
+
+                section.querySelectorAll('.menu-item').forEach(item => {
+                    const menuCode = item.querySelector('input[placeholder="Menu Code"]').value;
+                    const itemName = item.querySelector('input[placeholder="Item Name"]').value;
+                    const price = item.querySelector('input[placeholder="Price"]').value;
+                    const description = item.querySelector('textarea').value;
+
+                    if (menuCode && itemName && price && description) {
+                        items.push({ menuCode, itemName, price, description });
+                    }
+                });
+
+                menuData.push({ sectionName, items });
+            });
+
+            localStorage.setItem('indianFoodMenu', JSON.stringify(menuData));
+            alert('Menu changes saved successfully!');
+        });
+
+        // Preview menu (redirect to previous menu page)
+        document.getElementById('previewMenu').addEventListener('click', function() {
+            // In a real application, this would load the saved menu
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

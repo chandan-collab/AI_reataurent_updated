@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block body %}
+<link rel="stylesheet" href="../static/css/orders.css">
+
+    <div class="main-content">
+        <!-- <h1>Orders Management</h1> -->
+        <header>
+            <h1>Admin Orders Dashboard</h1>
+        </header>
+    
+        <div class="container">
+    
+            <div class="filter-section">
+                <label for="order-date">Filter by date:</label>
+                <input type="date" id="order-date" onchange="fetchOrdersByDate()" />
+            </div>
+    
+            <div class="order-section" id="today-orders">
+                <h2>Today's Orders <button class="accept-all-btn" onclick="acceptAllOrders()">Accept All Orders</button></h2>
+                <div id="order-list"></div>
+            </div>
+    
+            <div class="order-section" id="accepted-orders">
+                <h2>Accepted Orders</h2>
+                <div id="accepted-list"></div>
+            </div>
+    
+            <div class="order-section" id="rejected-orders">
+                <h2>Rejected Orders</h2>
+                <div id="rejected-list"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            const todayDate = new Date().toISOString().split('T')[0];
+            const selectedDate = localStorage.getItem("order-date") || document.getElementById("order-date").value;
+
+            // Load orders initially
+            if (!selectedDate || selectedDate === todayDate) {
+                fetchOrders();
+                
+                // Auto-refresh every 30 seconds if it's today's orders
+                setInterval(() => {
+                    const currentSelected = document.getElementById("order-date").value;
+                    if (!currentSelected || currentSelected === todayDate) {
+                        fetchOrders();
+                    }
+                }, 10000);
+            } else {
+                fetchOrders(selectedDate); // Load once, no auto-refresh
+            }
+    
+            // When date is changed
+            document.getElementById("order-date").addEventListener("change", function () {
+                const newDate = this.value;
+                localStorage.setItem("order-date", newDate);
+                fetchOrders(newDate);
+            });
+        });
+    
+        async function fetchOrders(date = null) {
+            const url = date ? `/get_orders_by_date?date=${date}` : '/get_today_orders';
+            const res = await fetch(url);
+            const data = await res.json();
+            displayOrders(data);
+        }
+    
+        function displayOrders(orders) {
+            const todayDiv = document.getElementById('order-list');
+            const acceptedDiv = document.getElementById('accepted-list');
+            const rejectedDiv = document.getElementById('rejected-list');
+            todayDiv.innerHTML = acceptedDiv.innerHTML = rejectedDiv.innerHTML = "";
+    
+            orders.forEach(order => {
+                playNotificationSound();
+                const orderDiv = document.createElement("div");
+                orderDiv.className = "order-card";
+                orderDiv.innerHTML = `
+                    <p><strong>User:</strong> ${order.user}</p>
+                    <p><strong>Details:</strong> ${order.order_details}</p>
+                    <p><strong>Qty:</strong> ${order.food_quantity}</p>
+                    <p><strong>Status:</strong> ${order.status}</p>
+                    <p><strong>Time:</strong> ${order.time}</p>
+                    <div class="actions">
+                        ${order.admin_action === "pending" ? `
+                        <button class="accept-btn" onclick="acceptOrder('${order.id}')">Accept
+                            <img src="../static/icons/checked.png" alt="Check Icon">
+                        </button>
+                        <button class="reject-btn" onclick="rejectOrder('${order.id}')">Reject
+                            <img src="../static/icons/no.png" alt="Check Icon">
+                        </button>
+                        ` : `<strong>Action: ${order.admin_action}</strong>`}
+                    </div>
+                `;
+    
+                if (order.admin_action === "accepted") {
+                    acceptedDiv.appendChild(orderDiv);
+                } else if (order.admin_action === "rejected") {
+                    rejectedDiv.appendChild(orderDiv);
+                } else {
+                    todayDiv.appendChild(orderDiv);
+                }
+            });
+        }
+    
+        async function acceptOrder(orderId) {
+            await fetch(`/accept_order/${orderId}`);
+            fetchOrders();
+            playNotificationSound();
+        }
+    
+        async function rejectOrder(orderId) {
+            await fetch(`/reject_order/${orderId}`);
+            fetchOrders();
+            playNotificationSound();
+        }
+    
+        async function acceptAllOrders() {
+            await fetch(`/accept_all_orders`);
+            fetchOrders();
+            playNotificationSound();
+        }
+    
+        function playNotificationSound() {
+            const audio = new Audio('../static/sound/notification1.mp3');
+            audio.play();
+        }
+    </script>
+    
+{% endblock body %}

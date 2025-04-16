@@ -1,0 +1,317 @@
+:root {
+    --primary-color: #1abc9c;
+    --secondary-color: #2c3e50;
+    --background-color: #ecf0f3;
+    --font-family: 'Roboto', sans-serif;
+    --button-radius: 8px; /* Slightly increased for rounded buttons */
+    --input-padding: 14px; /* Slightly increased padding for inputs */
+    --box-shadow-color: rgba(0, 0, 0, 0.4); /* Softer shadow */
+    --hover-bg-color: #f7f7f7; /* Softer hover color for rows */
+}
+
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family); /* Clean and modern font */
+}
+
+body {
+    /* Gradient background for a modern touch */
+    background: linear-gradient(135deg, #eff7f7, #f0f6f7);    /* Uncomment for gradient */
+    background-color: var(--background-color); /* Light background with a cool tone */
+    color: var(--secondary-color); /* Dark text for contrast */
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1, h2 {
+    font-weight: 700;
+    text-align: center; /* Center the headers */
+    color: var(--secondary-color); /* Elegant dark color for the text */
+}
+
+h1 {
+    margin-bottom: 20px; /* Spacing below the header */
+}
+
+h2 {
+    margin-top: 30px; /* Spacing below the header */
+}
+
+/* Form Styles */
+form {
+    background-color: #ffffff; /* White background */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px var(--box-shadow-color); /* Softer shadow for depth */
+    max-width: 500px; /* Reduced width */
+    width: 100%;
+    margin: 0 auto;
+    font-size: 16px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #7f8c8d;
+    margin-bottom: 8px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: var(--input-padding); /* Increased padding for comfort */
+    font-size: 16px;
+    border: 1.5px solid #bdc3c7; /* Subtle border color */
+    border-radius: var(--button-radius);
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border-color: var(--primary-color); /* Greenish border on focus */
+    outline: none;
+}
+
+button[type="submit"] {
+    background-color: var(--primary-color); /* Elegant mint green */
+    color: #ffffff;
+    padding: 12px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Full-width button */
+}
+
+button[type="submit"]:hover {
+    background-color: #16a085; /* Darker mint green on hover */
+}
+
+button[type="submit"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.5); /* Custom focus effect */
+}
+
+/* Menu Operations Section */
+.menu-operations {
+    background-color: #ffffff;
+    padding: 10px 20px; /* Reduced top and bottom padding */
+    border-radius: 12px;
+    margin-top: 40px;
+    box-shadow: 0 6px 18px var(--box-shadow-color);
+    text-align: center;
+    width: 100%;
+    max-width: 510px; /* Keeps the width unchanged */
+}
+
+.menu-operations h2 {
+    margin-top: 0px; /* Spacing below the section title */
+    padding: 0 0 25px;
+    color: var(--secondary-color); /* Rich blue for the section title */
+}
+
+.btn, button[type="button"] {
+    display: inline-block;
+    padding: 10px 20px; /* Slightly larger padding for better clickability */
+    margin: 5px 10px; /* Adjusted margin for better spacing */
+    text-decoration: none;
+    font-weight: 600; /* Slightly bolder font for emphasis */
+    font-size: 1rem; /* Increased font size for readability */
+    border-radius: var(--button-radius); /* Slightly more rounded corners */
+    transition: all 0.3s ease;
+}
+
+.btn-op, button[type="button"] {
+    background-color: #ffffff; /* Consistent white background */
+    color: var(--secondary-color); /* Darker text for better contrast */
+    border: 2px solid var(--secondary-color); /* Matching border color */
+}
+
+.btn-op:hover, button[type="button"]:hover {
+    background-color: var(--secondary-color); /* Dark background on hover */
+    color: #ffffff; /* White text for contrast */
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+    box-shadow: 0 6px 18px var(--box-shadow-color); /* Table shadow */
+    max-width: 880px; /* Adjusted max width */
+    margin-bottom: 50px; /* Added bottom margin */
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+}
+
+table th {
+    background-color: #2980b9; /* Blue header */
+    color: #ffffff;
+}
+
+table tr:nth-child(even) {
+    background-color: var(--background-color); /* Light grey for even rows */
+}
+
+table tr:hover {
+    background-color: var(--hover-bg-color); /* Softer hover effect */
+}
+
+table .btn {
+    padding: 8px 15px;
+    font-size: 14px;
+    text-decoration: none;
+    color: white;
+    border-radius: 6px;
+    margin: 5px;
+}
+
+table .btn-edit {
+    background-color: #3498db; /* Blue for edit button */
+}
+
+table .btn-edit:hover {
+    background-color: #2980b9;
+}
+
+table .btn-delete {
+    background-color: #e74c3c; /* Red for delete button */
+}
+
+table .btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    table th, table td {
+        padding: 10px;
+    }
+
+    button[type="submit"] {
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+
+    table {
+        overflow-x: auto; /* Allow horizontal scrolling */
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+
+
+/* Loader itself */
+.premium-loader {
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 50%;
+    border: 6px solid transparent;
+    border-top: 6px solid #bdf2e7;
+    border-radius: 50%;
+    position: relative;
+    animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+/* Inner gradient ring */
+.premium-loader:before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #4f46e5; /* Indigo gradient start */
+    border-right-color: #8b5cf6; /* Violet gradient end */
+    animation: spin 0.8s ease-in-out infinite;
+}
+
+/* Outer glow effect */
+.premium-loader:after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(79, 70, 229, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+    /* animation: pulse 2s ease-in-out infinite; */
+    animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite,bounce 2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    /* 0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.2; } */
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: scale(1); opacity: 0.5; }
+}
+
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+
+#toggleMenuBtn {
+    background-color: #007bff;
+    color: white;
+    margin-bottom: 10px;
+}
+
+#toggleMenuBtn:hover {
+    background-color: #0056b3;
+}
+
+
+#showMoreBtn {
+    background-color: #28a745;
+    color: white;
+    margin-top: 10px;
+}
+
+#showMoreBtn:hover {
+    background-color: #218838;
+}

@@ -1,0 +1,120 @@
+body {
+  background-color: #dddede;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar {
+  height: 100vh;
+  background-color: #212121;
+  padding-top: 2rem;
+  position: fixed;
+  width: 250px;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.sidebar a {
+  color: #cbd5e1;
+  padding: 12px 20px;
+  display: block;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background-color: #6d97b9;
+  color: #fff;
+  border-left: 4px solid #fff;
+  padding-left: 16px;
+  transform: scale(1.1);
+}
+
+/* Main content defaults */
+main {
+  margin-left: 250px;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+.navbar {
+  margin-left: 250px; /* Pushes navbar to the right */
+  padding: 10px 20px;
+  background-color: #fff; /* Optional: for visibility */
+  z-index: 900;
+  position: relative; /* Ensures z-index works properly */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Cards and visuals */
+.card, .card1, .card2, .card3, .card4 {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s;
+}
+
+.card { background-color: rgb(244, 248, 248); }
+.card1 { background-color: rgb(135, 189, 244); }
+.card2 { background-color: rgb(169, 157, 222); }
+.card3 { background-color: rgb(151, 219, 206); }
+.card4 { background-color: rgb(152, 216, 172); }
+
+.card1:hover {
+  transform: translateY(-4px);
+}
+
+.avatars img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin: 5px;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+
+.camera-box img {
+  width: 100%;
+  max-width: 640px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#scroll-box {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  main, .navbar {
+    margin-left: 0;
+  }
+
+  .toggle-sidebar {
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #212121;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+  }
+}

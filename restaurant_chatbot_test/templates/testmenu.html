@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salad Restaurant Food Menu</title>
+    <link rel="stylesheet" href="static/css/test_menu.css">
+</head>
+<body class="menu-body">
+    <div class="menu-container">
+        <img src="{{ url_for('static', filename='api/top.jpg') }}" alt="Delicious Indian Cuisine" class="featured-image">
+        <div class="menu-header">
+            <h1>Salad Restaurant Food Menu</h1>
+        </div>
+
+        <div class="menu-grid">
+            <!-- Loop for Veg Items -->
+            <div class="menu-section">
+                <h2>Vegetarian</h2>
+                <table class="menu-table">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="code">Code</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in menu_items if item['food_type'] == 'veg' %}
+                        <tr>
+                            <td class="item-code">{{ item['item_code'] }}</td>
+                            <td class="item-name">{{ item['name'] }}</td>
+                            <td class="item-price">₹{{ item['price'] }}</td>
+                            <td class="item-description">{{ item['description'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <img src="{{ url_for('static', filename='api/veg.jpg') }}" class="section-image">
+            </div>
+
+            <!-- Loop for Non-Veg Items -->
+            <div class="menu-section">
+                <h2>Non-Vegetarian</h2>
+                <table class="menu-table">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="code">Code</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in menu_items if item['food_type'] == 'non-veg' %}
+                        <tr>
+                            <td class="item-code">{{ item['item_code'] }}</td>
+                            <td class="item-name">{{ item['name'] }}</td>
+                            <td class="item-price">₹{{ item['price'] }}</td>
+                            <td class="item-description">{{ item['description'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <img src="{{ url_for('static', filename='api/chicken.jpg') }}" class="section-image">
+            </div>
+
+            <!-- Loop for Appetizers Items -->
+            <div class="menu-section">
+                <h2>Appetizers</h2>
+                <table class="menu-table">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="code">Code</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in menu_items if item['food_type'] == 'appetizer' %}
+                        <tr>
+                            <td class="item-code">{{ item['item_code'] }}</td>
+                            <td class="item-name">{{ item['name'] }}</td>
+                            <td class="item-price">₹{{ item['price'] }}</td>
+                            <td class="item-description">{{ item['description'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <img src="{{ url_for('static', filename='api/samosa.jpg') }}" class="section-image">
+            </div>
+
+            <!-- Loop for Desserts Items -->
+            <div class="menu-section">
+                <h2>Desserts</h2>
+                <table class="menu-table">
+                    <thead>
+                        <tr class="table-header">
+                            <th class="code">Code</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in menu_items if item['food_type'] == 'desserts' %}
+                        <tr>
+                            <td class="item-code">{{ item['item_code'] }}</td>
+                            <td class="item-name">{{ item['name'] }}</td>
+                            <td class="item-price">₹{{ item['price'] }}</td>
+                            <td class="item-description">{{ item['description'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <img src="{{ url_for('static', filename='api/samosa.jpg') }}" class="section-image">
+            </div>
+        </div>
+
+    </div>
+    <div class="menu-header">
+        <h3>                 </h3>
+    </div>
+    <div class="menu-header">
+        <h1>                 </h1>
+    </div>
+</body>
+</html>

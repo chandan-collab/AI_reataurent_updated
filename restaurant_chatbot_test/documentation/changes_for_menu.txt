@@ -1,0 +1,203 @@
+import time    
+    
+    if "menu" in incoming_msg:
+        menu_image_urls = [
+        "https://mvjroqqhrgwyaujtwqnm.supabase.co/storage/v1/object/public/menu/menu1.jpg?t=raw", 
+        "https://mvjroqqhrgwyaujtwqnm.supabase.co/storage/v1/object/public/menu/menu2.jpg?t=raw",
+        "https://mvjroqqhrgwyaujtwqnm.supabase.co/storage/v1/object/public/menu/menu3.jpg?t=raw",
+        "https://mvjroqqhrgwyaujtwqnm.supabase.co/storage/v1/object/public/menu/tea.jpg?t=raw"
+                ] # ?t=raw forces the Supabase URL to serve the image directly with the proper content type.
+                    #"https://drive.google.com/uc?id=1QG9euVD2YNmrpjoFHRAJ9a1C6Ya26Kyx", use gd drive like this for access menu jpg/image
+            
+        send_whatsapp_message(user, "Here is our menu:")
+        for url in menu_image_urls:
+            send_whatsapp_message(user, "", image_urls=[url])
+            time.sleep(1) ## time delay bcz twilio has limitation on send media 
+
+
+
+
+isinstance()?
+It's helpful for type-checking when you want to ensure an object is of a certain class or conforms to a certain type,
+ especially when handling different types of objects dynamically. It helps avoid errors and unexpected behaviors.
+
+use **?
+Convenience: It allows you to dynamically pass a large number of arguments from a dictionary without manually listing each one.
+
+Flexibility: It's useful when you don't know the exact arguments beforehand or when you have a set of parameters that might change over time.
+
+Clean Code: It avoids repeating long argument lists and keeps the code more readable and concise.
+
+
+
+
+
+client.messages:
+
+This accesses the messages resource or service within the client object. It represents the messaging service or API for sending SMS, MMS, or other types of messages through the service.
+
+.create():
+
+This is a method that is called to actually create (or send) the message. It’s usually the action that makes a request to the service's API to send the message. The create() method generally requires parameters like the recipient's phone number, the message content, and other optional settings (like sender ID, media, etc.).
+
+
+
+
+
+
+
+# Initialize Flask App
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/', methods=['GET', 'POST'])
+def bot():
+    """Handles incoming WhatsApp messages via Twilio."""
+    if request.method == "GET":
+        return "Webhook Verified!", 200
+
+    incoming_msg = request.values.get("Body", "").strip().lower()
+    user = request.values.get("From", "")
+    response = MessagingResponse()
+    msg = response.message()
+    
+    if "menu" in incoming_msg:
+        menu_image_urls = [
+        "https://mvjroqqhrgwyaujtwqnm.supabase.co/storage/v1/object/public/menu/menu1.jpg?t=raw", 
+        "https://mvjroqqhrgwyaujtwqnm.supabase.co/storage/v1/object/public/menu/menu2.jpg?t=raw",
+        "https://mvjroqqhrgwyaujtwqnm.supabase.co/storage/v1/object/public/menu/menu3.jpg?t=raw",
+        "https://mvjroqqhrgwyaujtwqnm.supabase.co/storage/v1/object/public/menu/tea.jpg?t=raw"
+                ] # ?t=raw forces the Supabase URL to serve the image directly with the proper content type.
+                    #"https://drive.google.com/uc?id=1QG9euVD2YNmrpjoFHRAJ9a1C6Ya26Kyx", use gd drive like this for access menu jpg/image
+            
+        send_whatsapp_message(user, "Here is our menu:")
+        for url in menu_image_urls:
+            send_whatsapp_message(user, "", image_urls=[url])
+            time.sleep(1)
+
+    elif "order" in incoming_msg:
+        order_details = incoming_msg.replace("order", "").strip()
+        msg.body(place_order(user, order_details))
+    
+    elif "confirm" in incoming_msg:
+        msg.body(confirm_order(user))
+    
+    else:
+        msg.body(chatbot_response(incoming_msg))
+    
+    return str(response)
+
+
+
+
+
+
+
+
+
+
+
+# Menu image directory
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    """for static files."""
+    return send_from_directory('static', filename)
+
+
+# Upload menu images
+# @app.route('/upload', methods=['POST'])
+# def upload_menu():
+#     files = request.files.getlist('menu_files')
+#     for file in files:
+#         if file:
+#             filename = secure_filename(file.filename)
+#             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#     return redirect(url_for('admin_page'))
+
+# Get menu images
+# @app.route('/get_menu')
+# def get_menu():
+#     images = [f"/static/{f}" for f in os.listdir(app.config['UPLOAD_FOLDER'])]
+#     return jsonify({'images': images})
+
+# Delete menu image
+# @app.route('/delete_menu', methods=['POST'])
+# def delete_menu():
+#     data = request.get_json()
+#     image_path = os.path.join('static', data['image_url'].split('/static/')[-1])
+#     if os.path.exists(image_path):
+#         os.remove(image_path)
+#     return jsonify({'status': 'success'})
+
+
+
+# Route to get live orders (for dashboard)
+@app.route('/get_orders', methods=['GET'])
+def get_orders():
+    """Fetch today's live orders."""
+    orders = get_all_orders()
+    return jsonify({'orders': orders})
+
+
+
+
+
+
+
+
+
+
+
+
+not working 
+  if "menu" in incoming_msg:
+        base_url = "https://c1fd-103-210-29-150.ngrok-free.app/demo/restaurant_chatbot_test/static"
+        menu_image_urls = [
+            f"{base_url}/menu1.jpg",
+            f"{base_url}/menu2.jpg",
+            f"{base_url}/menu3.jpg",
+            f"{base_url}/tea.jpg"
+        ]
+
+        send_whatsapp_message(user, "Here is our menu:")
+        
+
+
+
+
+
+
+
+
+
+
+1. cv2.imwrite(output_path, img, [...])
+This writes (saves) the image img to the specified output_path.
+
+The image format is determined by the file extension (e.g., .jpg, .png).
+
+2. [cv2.IMWRITE_JPEG_QUALITY, quality]
+This controls the compression level for JPEG images.
+
+cv2.IMWRITE_JPEG_QUALITY is an OpenCV flag used to specify the quality of the saved image.
+
+quality:
+
+Ranges from 0 to 100.
+
+100 → Best quality (large file size).
+
+0 → Lowest quality (small file size).
+
+Why Use This?
+Twilio has file size limits, and screenshots can be large.
+
+Reducing quality helps send images over WhatsApp without hitting size restrictions.
+
+
+
+
+
+                const url = date ? `/get_orders_by_date?date=${date}` : "/get_today_orders";

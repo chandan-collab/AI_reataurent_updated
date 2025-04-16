@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Menu Item</title>
+    <link rel="stylesheet" href="../static/css/edit_menu.css">
+</head>
+<body>
+
+        <h1>Edit Menu Item</h1>
+
+        <form action="/edit_menu/{{ item.item_code }}" method="POST">
+            <label>Item Code:</label>
+            <input type="text" name="item_code" value="{{ item.item_code }}" readonly>
+
+            <label>Food Type</label>
+            <input type="text" name="food_type" value="{{ item.food_type }}" readonly>
+
+            <label>Food Group:</label>
+            <input type="text" name="food_group" value="{{ item.food_group }}" readonly>
+
+            <label>Name:</label>
+            <input type="text" name="name" value="{{ item.name }}" required>
+
+            <label>Description:</label>
+            <input type="text" name="description" value="{{ item.description }}" required>
+
+            <label>Price:</label>
+            <input type="number" name="price" step="1" value="{{ item.price }}" required>
+
+            <button type="submit">Save Changes</button>
+        </form>
+
+        <a href="/menu">Back to Menu List</a>
+
+
+</body>
+</html>
