@@ -1,83 +1,118 @@
 from config import url, key
-from core.menu import menu_keys, get_menu
 from supabase import create_client
 from datetime import datetime
 
+# from core.order_manager import process_order_to_db
 # connect to Supabase
 supabase = create_client(url, key)
 
+def process_order_to_db(user_phone, order_data):
+    now = datetime.now()
+    date = now.date().isoformat()
+    time = now.strftime("%H:%M:%S")
 
-def place_order(user, order_details):
-    new = datetime.now()
-    current_date = new.date().isoformat()
-    current_time = new.time().replace(microsecond=0,second=0).isoformat()
-    # current_time=new.replace(microsecond=0).isoformat()
+    supabase.table("orders").insert({
+        "order_id": order_data["order_id"],
+        "user": user_phone,
+        "order_details": order_data["order_details"],
+        "food_quantity": order_data["food_quantity"],
+        "parsed_json": order_data["parsed_json"],  
+        "date": date,
+        "time": time,
+    }).execute()
 
-    menu_items = menu_keys() # fetch primary keys
-    
-    order_items = order_details.replace(',', ' ').split() # split the order details into individual items (handles both comma & space separation)
-    print(f"Order items: ",order_items)
+# def confirm_order2(order_id, user):
+#     print(f"Confirming order {order_id} ")
+#     try:
 
-    valid_items = []
-    invalid_items = []
+#         # Step 1: Fetch order with matching id and user
+#         result = supabase.table('orders').select("*").eq("order_id", order_id).eq("user", user).execute()
+#         order_data = result.data
 
-    # check the order items
-    for item in order_items:
-        if item in map(str, menu_items):
-            valid_items.append(item)  #valid items
-        else:
-            invalid_items.append(item)  #invalid items
+#         if not order_data:
+#             return "No matching order found for this user."
 
-    print(f"Valid: {valid_items}, Invalid: {invalid_items}")
-    
-    
-    if not valid_items:
-        invalid_str= ", ".join(invalid_items)
-        return f"{invalid_str} not present in our menu.\n\n{get_menu(user)}"
+#         # Step 2: Check if already confirmed or cancelled
+#         current_status = order_data[0].get("status", "").lower()
+#         if current_status == "confirmed":
+#             return f"Your order {order_id} is already confirmed."
+#         elif current_status == "cancelled":
+#             return "This order was already cancelled."
 
-    # summary of valid items
-    order_summary = ", ".join(valid_items)
+#         # Step 3: Proceed with confirmation
+#         update_response = supabase.table('orders').update({
+#             "status": "confirmed"
+#         }).eq("order_id", order_id).eq("user", user).execute()
 
+#         if update_response.data:
+#             return f"Your order *{order_id}* is confirmed !\nWe will prepare your fresh food shortly."
+#         else:
+#             return "Error confirming order. Please try again."
+
+#     except Exception as e:
+#         return f"Plese enter a order id."
+
+def confirm_order(order_id, user):
     try:
-        # store the order
-        supabase.table('orders').insert({
-            "user": user,
-            "order_details": order_summary,
-            "time": current_time,
-            "date": current_date
-        }).execute()
+        if not order_id:
+            return "Please provide a valid order ID."
+        # Fetch order using order_id and user
+        result = supabase.table('orders').select("*").eq("order_id", order_id).eq("user", user).execute()
+        order_data = result.data
 
-        # confirmation message
-        response_text = f"Order received: {order_summary}\nType 'confirm' to proceed."
+        if not order_data:
+            return f"⚠️ No matching order found for *{order_id}*."
 
-        # invalid items
-        if invalid_items:
-            response_text += f"\n\n(Note: We do not have {', '.join(invalid_items)} in our menu.)"
+        current_status = order_data[0].get("status", "").lower()
+        if current_status == "confirmed":
+            return f"Order *{order_id}* is already confirmed."
+        elif current_status == "cancelled":
+            return f"Order *{order_id}* has already been cancelled."
 
-        return response_text
-
-    except Exception as e:
-        print(f"Error: {e}")
-        return "Error saving order. Please try again."
-
-
-def confirm_order(user):
-    try:
-        # update order status 
-        response = supabase.table('orders').update({
+        # Update status
+        update_response = supabase.table('orders').update({
             "status": "confirmed"
-        }).eq("user", user).execute()
+        }).eq("order_id", order_id).eq("user", user).execute()
 
-        # check if the order was updated
-        if response.data:
-            return "Your order is confirmed!\nWe will prepare your fresh food shortly."
+        if update_response.data:
+            return f"🎉 Your order *{order_id}* is now confirmed!\nWe'll prepare your food shortly."
         else:
-            return "No order found for this user."
+            return "Failed to confirm the order. Please try again."
 
     except Exception as e:
-        print(f"Error: {e}")
-        return "Error confirming order. Please try again."
+        return f"❗ Something went wrong: {str(e)}"
 
+def cancel_order(order_id, user):
+    try:
+        if not order_id:
+            return "Please provide a valid order ID."
+        # Step 1: Check for existing order with matching id and user
+        result = supabase.table('orders').select("*").eq("order_id", order_id).eq("user", user).execute()
+        order_data = result.data
+
+        if not order_data:
+            return "No matching order found for this user."
+
+        # Step 2: Check current status
+        current_status = order_data[0].get("status", "").lower()
+        if current_status == "cancelled":
+            return f"This order {order_id} is already cancelled."
+        # elif current_status == "confirmed":
+        #     return "Your order is already confirmed and can't be cancelled."
+
+        # Step 3: Proceed with cancellation
+        update_response = supabase.table('orders').update({
+            "status": "cancelled"
+        }).eq("order_id", order_id).eq("user", user).execute()
+
+        if update_response.data:
+            return f"Your order {order_id} has been cancelled successfully."
+        else:
+            return "Failed to cancel the order. Please try again."
+
+    except Exception as e:
+        return f"❗ Something went wrong: {str(e)}"
+       
 def get_all_orders():
     """Fetch all orders from Supabase."""
     try:

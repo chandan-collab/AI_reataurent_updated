@@ -1,8 +1,9 @@
 body {
-  background-color: #dddede;
+  background-color: #f8f7f4;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 .sidebar {
@@ -13,7 +14,7 @@ body {
   width: 250px;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 800;
   transition: transform 0.3s ease;
 }
 
@@ -22,7 +23,7 @@ body {
   padding: 12px 20px;
   display: block;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 0.95rem;
   transition: all 0.2s;
 }
 
@@ -32,26 +33,20 @@ body {
   color: #fff;
   border-left: 4px solid #fff;
   padding-left: 16px;
-  transform: scale(1.1);
 }
 
-/* Main content defaults */
 main {
-  margin-left: 250px;
-  padding: 20px;
   transition: margin-left 0.3s ease;
+  padding: 20px;
 }
 
 .navbar {
-  margin-left: 250px; /* Pushes navbar to the right */
+  transition: margin-left 0.3s ease;
   padding: 10px 20px;
-  background-color: #fff; /* Optional: for visibility */
-  z-index: 900;
-  position: relative; /* Ensures z-index works properly */
+  z-index: 700;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Cards and visuals */
 .card, .card1, .card2, .card3, .card4 {
   border: none;
   border-radius: 10px;
@@ -70,8 +65,8 @@ main {
 }
 
 .avatars img {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   margin: 5px;
   object-fit: cover;
@@ -91,7 +86,12 @@ main {
   overflow: auto;
 }
 
-/* Responsive Styles */
+@media (min-width: 769px) {
+  main, .navbar {
+    margin-left: 250px;
+  }
+}
+
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
@@ -105,9 +105,13 @@ main {
     margin-left: 0;
   }
 
+  main.sidebar-active, .navbar.sidebar-active {
+    margin-left: 250px;
+  }
+
   .toggle-sidebar {
     display: block;
-    position: absolute;
+    position: fixed;
     top: 15px;
     left: 15px;
     background: #212121;
@@ -115,6 +119,8 @@ main {
     padding: 8px 12px;
     border: none;
     cursor: pointer;
-    z-index: 1100;
+    z-index: 900;
+    font-size: 0.9rem;
+    border-radius: 4px;
   }
 }

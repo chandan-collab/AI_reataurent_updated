@@ -201,3 +201,107 @@ Reducing quality helps send images over WhatsApp without hitting size restrictio
 
 
                 const url = date ? `/get_orders_by_date?date=${date}` : "/get_today_orders";
+
+
+
+pattern = r"(\d+)\s*(full\s*plate|half\s*plate|full|half|plate|ml|l)?\s*(\d+)"
+This pattern is used to extract order details like quantity, unit (full/half/plate/ml etc.), and item code from user messages.
+
+🔍 Regex Breakdown:
+(\d+)
+Matches any number (1 or more digits).
+
+This represents the quantity (e.g., 2, 500, etc.)
+
+\s*
+Matches optional whitespace (zero or more spaces).
+
+Allows flexible spacing between quantity and unit (e.g., 2full, 2 full)
+
+(full\s*plate|half\s*plate|full|half|plate|ml|l)?
+Matches units of quantity like:
+
+"full plate" ✅
+
+"halfplate" ✅
+
+"ml", "l" ✅
+
+It also handles spacing in "full plate" or "half plate"
+
+The ? at the end makes this optional (in case no unit is specified).
+
+\s*
+Again allows optional spacing before the item code.
+
+(\d+)
+Matches the item code (e.g., 509, 302, etc.)
+
+✅ Example Matches:
+Input: "2full 509"
+→ ('2', 'full', '509')
+
+Input: "2 full plate 502"
+→ ('2', 'full plate', '502')
+
+Input: "500ml 406"
+→ ('500', 'ml', '406')
+
+Input: "2 501"
+→ ('2', None, '501') (no unit, defaults to "piece")
+
+
+
+✅ Supported Order Formats:
+Order Text	Expected Match	Status
+2full 509	Qty: 2, Unit: full, Code: 509	✅
+500ml 406	Qty: 500, Unit: ml, Code: 406	✅
+2 full plate 502	Qty: 2, Unit: full plate, Code: 502	✅
+1 halfplate 601	Qty: 1, Unit: half plate, Code: 601	✅
+2 501	Qty: 2, Unit: None (default), Code: 501	✅
+2 fullplate 303	Qty: 2, Unit: full plate, Code: 303	✅
+1 plate 502	Qty: 1, Unit: plate, Code: 502	✅
+1 l 605	Qty: 1, Unit: l (litre), Code: 605	✅
+❌ NOT Handled:
+But here are a few edge cases that might not work perfectly:
+
+Order with no spacing at all like:
+
+"2full509" ← Won't match properly
+
+"500ml406" ← Won’t match
+
+Wrong sequences like:
+
+"509 2full" ← Wrong order (item code first) → ❌ Not supported
+
+"502 full plate 2" ← Unit before quantity → ❌ Not supported
+
+Misspelled unit formats:
+
+"fullplate" is handled ✅
+
+But "fulplate" or "flplate" → ❌ No match
+
+
+pattern = r"(\d+)\s*(full\s*plate|half\s*plate|full|half|plate|ml|l)?\s*(\d{3})"
+🔍 Explanation:
+
+Part	Meaning
+(\d+)	Captures the quantity (any number)
+\s*	Allows for optional spacing between parts
+(unit options)?	Matches optional unit types like full, ml, plate, etc.
+\s*	Allows for more optional spaces
+(\d{3})	Matches 3-digit item code (you can change {3} to + if flexible)
+✅ Now this will match:
+"2full301"
+
+"2 full plate 301"
+
+"500ml 406"
+
+"2 fullplate 301"
+
+"2 301" (no unit)
+
+"1l605"

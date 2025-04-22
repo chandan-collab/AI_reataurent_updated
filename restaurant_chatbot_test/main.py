@@ -2,14 +2,13 @@ from flask import Flask, request, jsonify, send_from_directory,render_template, 
 from datetime import datetime
 from flask_cors import CORS
 from core.chatbot import chatbot_response
-from core.order_manager import place_order, confirm_order,get_all_orders
-from core.menu import get_menu
 from core.twilio_whatsapp import send_whatsapp_message
 from twilio.twiml.messaging_response import MessagingResponse
 from supabase import create_client, Client
 from config import url, key
 #for compressing image
-import cv2, os , time
+from data.given_data import compress_image
+import os , time
 #for full screenshot
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -22,32 +21,20 @@ supabase: Client = create_client(url, key)
 new = datetime.now()
 current_time=new.replace(microsecond=0).isoformat()
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def bot():
-    """Handles incoming WhatsApp messages via Twilio."""
     if request.method == "GET":
         return "Webhook Verified!", 200
 
-    incoming_msg = request.values.get("Body", "").strip().lower()
+    incoming_msg = request.values.get("Body", "").strip()
     user = request.values.get("From", "")
+
     response = MessagingResponse()
     msg = response.message()
 
-    if "menu" in incoming_msg:
-        msg.body(get_menu(user))   
-
-    elif "order" in incoming_msg:
-        order_details = incoming_msg.replace("order", "").strip()
-        msg.body(place_order(user, order_details))
-
-    elif "confirm" in incoming_msg:
-        msg.body(confirm_order(user))
-
-    else:
-        msg.body(chatbot_response(incoming_msg))
+    msg.body(chatbot_response(incoming_msg, user))
 
     return str(response)
-
 
 @app.route('/send', methods=['POST'])
 def send_message():
@@ -96,7 +83,7 @@ def add_menu():
     food_group = request.form['food_group']
     name = request.form['name']
     description = request.form['description']
-    price = int(request.form['price'])
+    price =int(request.form['price'])
 
     try:
         supabase.table('menu').insert({
@@ -143,7 +130,6 @@ def edit_menu(item_code):
         print("Error updating menu item:", e)
 
     return redirect(url_for('menu'))
-
 
 @app.route('/fetch_menu', methods=['GET'])
 def fetch_menu():
@@ -216,7 +202,7 @@ def menu():
 def get_today_orders():
     """Fetch orders for today."""
     today =datetime.now().date().isoformat() # request.args.get("date")
-    response = supabase.table("orders").select("*").eq("date", today).execute()
+    response = supabase.table("orders").select("*").eq("date", today).eq("status", "confirmed").execute()
     return jsonify(response.data)
 
 @app.route("/get_orders_by_date")
@@ -227,26 +213,22 @@ def get_orders_by_date():
 
 @app.route("/accept_order/<order_id>")
 def accept_order(order_id):
-    supabase.table("orders").update({"admin_action": "accepted"}).eq("id", order_id).execute()
+    supabase.table("orders").update({"admin_action": "accepted"}).eq("order_id", order_id).execute()
     return jsonify({"message": "Order accepted"})
 
 @app.route("/reject_order/<order_id>")
 def reject_order(order_id):
-    supabase.table("orders").update({"admin_action": "rejected"}).eq("id", order_id).execute()
+    supabase.table("orders").update({"admin_action": "rejected"}).eq("order_id", order_id).execute()
     return jsonify({"message": "Order rejected"})
 
 @app.route("/accept_all_orders")
 def accept_all_orders():
     
     today = datetime.now().date().isoformat()
-    print(f"Date : {today}")
+
     supabase.table("orders").update({"admin_action": "accepted"}).eq("date", today).execute()
     return jsonify({"message": "All orders accepted"})
 
-def compress_image(image_path, output_path, quality=35): #100 is best quality, and 0 is lowest quality
-    img = cv2.imread(image_path)
-    cv2.imwrite(output_path, img, [cv2.IMWRITE_JPEG_QUALITY, quality])
-#twilio has file size limits, and screenshots can be large.
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

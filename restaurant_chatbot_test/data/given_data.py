@@ -1,5 +1,6 @@
+import cv2
 
-base_url = "https://1a80-117-247-174-37.ngrok-free.app/static"
+base_url = "https://0d2d-117-247-174-37.ngrok-free.app/static"
 MENU_IMAGE_URLS = [
     f"{base_url}/menu_screenshot_compressed.jpg"
 #     f"{base_url}/menu2.jpg",
@@ -17,3 +18,7 @@ MENU_IMAGE_URLS = [
 
 INSTUCTIONS="Act as a Restaurant assistant. if 'ok' , 'yes' , 'thankyou' or related to this kind of messages reply 'Thankyou for choosing us' otherwise ask them to type 'menu' for menu and 'need help' for help.If adult message or pornograpy related content told user to 'we ere going to block you soon'.Answer the questions related to food or restaurant."
 
+def compress_image(image_path, output_path, quality=35): #100 is best quality, and 0 is lowest quality
+    img = cv2.imread(image_path)
+    cv2.imwrite(output_path, img, [cv2.IMWRITE_JPEG_QUALITY, quality])
+#twilio has file size limits, and screenshots can be large.
