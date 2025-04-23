@@ -1,9 +1,9 @@
 import cv2
 
-base_url = "https://0d2d-117-247-174-37.ngrok-free.app/static"
+base_url = "https://8609-117-247-174-37.ngrok-free.app/static"
 MENU_IMAGE_URLS = [
-    f"{base_url}/menu_screenshot_compressed.jpg"
-#     f"{base_url}/menu2.jpg",
+    f"{base_url}/menu_screenshot_compressed.jpg",
+    f"{base_url}/instructions1.jpg"
 #     f"{base_url}/menu3.jpg",
 #     f"{base_url}/menu4.jpg",
 #     f"{base_url}/menu5.jpg"
@@ -16,7 +16,7 @@ MENU_IMAGE_URLS = [
 
 
 
-INSTUCTIONS="Act as a Restaurant assistant. if 'ok' , 'yes' , 'thankyou' or related to this kind of messages reply 'Thankyou for choosing us' otherwise ask them to type 'menu' for menu and 'need help' for help.If adult message or pornograpy related content told user to 'we ere going to block you soon'.Answer the questions related to food or restaurant."
+INSTUCTIONS="Act as a Restaurant assistant answer the questions related restaurant aslo describe benefits of asked food or item related food. if 'ok' , 'yes' , 'thankyou' or related to this kind of messages reply 'Thankyou for choosing us' otherwise ask them to type 'menu' for menu and 'need help' for help.If adult message or pornograpy related content told user to 'we ere going to block you soon'."
 
 def compress_image(image_path, output_path, quality=35): #100 is best quality, and 0 is lowest quality
     img = cv2.imread(image_path)

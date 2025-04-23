@@ -1,8 +1,12 @@
 import os
 from dotenv import load_dotenv
-
+from supabase import create_client
 # Load environment variables from .env file
 load_dotenv()
+
+
+
+
 
 # Twilio Credentials
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
@@ -12,5 +16,6 @@ TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER", "whatsapp:+14155238
 #supabase
 key=os.getenv("SUPA_KEY")
 url=os.getenv("SUPA_URL")
+supabase = create_client(url, key)
 # Google Gemini API Key
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")

@@ -1,6 +1,6 @@
 from integrations.gemini_ai import get_gemini_response
-from core.menu import get_menu,get_menu_dict
-from core.order_manager import confirm_order, cancel_order,process_order_to_db
+from services.menu import get_menu,get_menu_dict
+from services.order_manager import confirm_order, cancel_order,process_order_to_db
 import re
 from datetime import datetime
 

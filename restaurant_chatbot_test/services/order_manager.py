@@ -1,15 +1,11 @@
-from config import url, key
-from supabase import create_client
-from datetime import datetime
+from config import supabase
 
-# from core.order_manager import process_order_to_db
-# connect to Supabase
-supabase = create_client(url, key)
+from datetime import datetime
 
 def process_order_to_db(user_phone, order_data):
     now = datetime.now()
     date = now.date().isoformat()
-    time = now.strftime("%H:%M:%S")
+    time = now.strftime("%H:%M")
 
     supabase.table("orders").insert({
         "order_id": order_data["order_id"],
@@ -21,37 +17,6 @@ def process_order_to_db(user_phone, order_data):
         "time": time,
     }).execute()
 
-# def confirm_order2(order_id, user):
-#     print(f"Confirming order {order_id} ")
-#     try:
-
-#         # Step 1: Fetch order with matching id and user
-#         result = supabase.table('orders').select("*").eq("order_id", order_id).eq("user", user).execute()
-#         order_data = result.data
-
-#         if not order_data:
-#             return "No matching order found for this user."
-
-#         # Step 2: Check if already confirmed or cancelled
-#         current_status = order_data[0].get("status", "").lower()
-#         if current_status == "confirmed":
-#             return f"Your order {order_id} is already confirmed."
-#         elif current_status == "cancelled":
-#             return "This order was already cancelled."
-
-#         # Step 3: Proceed with confirmation
-#         update_response = supabase.table('orders').update({
-#             "status": "confirmed"
-#         }).eq("order_id", order_id).eq("user", user).execute()
-
-#         if update_response.data:
-#             return f"Your order *{order_id}* is confirmed !\nWe will prepare your fresh food shortly."
-#         else:
-#             return "Error confirming order. Please try again."
-
-#     except Exception as e:
-#         return f"Plese enter a order id."
-
 def confirm_order(order_id, user):
     try:
         if not order_id:
@@ -61,7 +26,7 @@ def confirm_order(order_id, user):
         order_data = result.data
 
         if not order_data:
-            return f"⚠️ No matching order found for *{order_id}*."
+            return f"No matching order found for *{order_id}*."
 
         current_status = order_data[0].get("status", "").lower()
         if current_status == "confirmed":

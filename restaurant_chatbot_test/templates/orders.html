@@ -13,7 +13,7 @@
   <div class="container">
     <div class="filter-section">
       <label for="order-date">Filter by date:</label>
-      <input type="date" id="order-date" onchange="fetchOrdersByDate()" />
+      <input type="date" id="order-date" onchange="fetchOrdersByDate()">
     </div>
 
     <div class="order-section" id="today-orders">
@@ -36,7 +36,7 @@
 <script>
   $(document).ready(function () {
     const todayDate = new Date().toISOString().split('T')[0];
-    const selectedDate = localStorage.getItem("order-date") || document.getElementById("order-date").value;
+    const selectedDate = document.getElementById("order-date").value;
 
     if (!selectedDate || selectedDate === todayDate) {
       fetchOrders();
@@ -47,6 +47,7 @@
         }
       }, 10000);
     } else {
+      
       fetchOrders(selectedDate);
     }
 
@@ -74,11 +75,34 @@
       const orderDiv = document.createElement("div");
       orderDiv.className = "order-card";
       orderDiv.innerHTML = `
-        <p><strong>User:</strong> ${order.user}/${order.id}</p>
-        <p><strong>Order Id:</strong> ${order.order_id}</p>
-        <p><strong>Qty:</strong> ${order.food_quantity}</p>
-        <p><strong>Status:</strong> ${order.status}</p>
-        <p><strong>Time:</strong> ${order.time}</p>
+  <div class="order-header">
+    <strong>Order ID:</strong> ${order.order_id} | 
+    <strong>User:</strong> ${order.user} / ${order.id}
+  </div>
+  <table class="styled-order-table">
+    <thead>
+      <tr>
+        <th>Quantity</th>
+        <th>Order Details</th>
+        <th>Status</th>
+        <th>Time</th>
+        <th>Admin Action</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>${order.food_quantity}</td>
+        <td>${order.order_details}</td>
+        <td>${order.status}</td>
+        <td>${order.time}</td>
+        <td>${order.admin_action}</td>
+        <td>${order.date}</td>
+      </tr>
+    </tbody>
+  </table>
+
+
         <div class="actions">
           ${order.admin_action === "pending" ? `
           <button class="accept-btn" onclick="acceptOrder('${order.order_id}')">
